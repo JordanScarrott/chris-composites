@@ -12,6 +12,19 @@ You can read more about how we built it and the cool new tech we used [on our bl
 
 Now available as an official Astro theme! [Download it from the Astro themes page](https://astro.build/themes/details/blackspike-astro-landing-page/)
 
+## Table of Contents
+
+- [Live Demo](#live-demo-httpsastro-themeblackspikecom)
+- [License](#license)
+- [Features](#features)
+  - [Astro 5 Features](#astro-5-features)
+  - [CSS & HTML Features](#css--html-features)
+  - [JS Features](#js-features)
+- [Previews](#previews)
+- [Credits](#credits)
+- [Tags](#tags)
+- [Commands](#commands)
+
 ## Live demo https://astro-theme.blackspike.com
 
 We hope you find it useful!
@@ -22,7 +35,9 @@ Theme and 3D images are licensed under a [Creative Commons Attribution 4.0 Inter
 
 Created by blackspike [blackspike design](https://www.blackspike.com) – a web design & development team specialising in Astro, Vue, Nuxt & Wordpress websites
 
-## Astro 5 Features
+## Features
+
+### Astro 5 Features
 
 - [Image component](https://docs.astro.build/en/guides/images/#display-optimized-images-with-the-image--component) for optimised AVIF images
 - All-[JSX](https://docs.astro.build/en/reference/astro-syntax/) native astro components
@@ -30,7 +45,7 @@ Created by blackspike [blackspike design](https://www.blackspike.com) – a web 
 - JSON-powered content (easy to edit UI text or hook up a CMS!)
 - Experimental [Fonts API](https://docs.astro.build/en/reference/experimental-flags/fonts/)
 
-## CSS & HTML Features
+### CSS & HTML Features
 
 - [Tailwind 4](https://tailwindcss.com/blog/tailwindcss-v4)
 - HTML modal dialog
@@ -40,7 +55,7 @@ Created by blackspike [blackspike design](https://www.blackspike.com) – a web 
 - Linear easing for bouncing / springing
 - Text wrap pretty / balance
 
-## JS Features
+### JS Features
 
 - [swiper.js](https://swiperjs.com/) carousel
 
@@ -70,14 +85,13 @@ Created by blackspike [blackspike design](https://www.blackspike.com) – a web 
 
 ## Commands
 
-All commands are run from the root of the project, from a terminal:
+All commands are run from the root of the project, from a terminal. This project uses `pnpm` as the package manager.
 
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
+| `pnpm install`             | Installs dependencies                            |
+| `pnpm run dev`             | Starts local dev server at `localhost:4321`      |
+| `pnpm run build`           | Build your production site to `./dist/`          |
+| `pnpm run preview`         | Preview your build locally, before deploying     |
+| `pnpm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `pnpm run astro -- --help` | Get help using the Astro CLI                     |
