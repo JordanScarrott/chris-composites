@@ -1,14 +1,14 @@
 {
-  "hero_title": "blackspike astro landing page",
-  "hero_content": "<p><strong>A free Astro landing theme made with Tailwind</strong> to help kick start your Astro website.</p><p>Uses modern CSS and HTML features for added zip, plus a slick swiper carousel. All in Astro JSX.</p>",
-  "services_title": "Our services",
+  "hero_title": "Unlocking Innovation in Composites",
+  "hero_content": "<p>With decades of industry-leading experience in research and development, we provide expert consulting and training to solve your most complex composite challenges.</p>",
+  "services_title": "How We Can Help",
   "clients_title": "Trusted by some great companies",
   "testimonials_title": "Clients ♥ us",
   "case_studies_title": "Case studies",
   "pricing_title": "We do design retainers",
-  "quote_content": "This <strong>design agency</strong> is a <strong>game changer</strong>. Its <strong>creative vision</strong>, <strong>user-focused approach</strong>, and <strong>seamless collaboration</strong> have <strong>transformed</strong> the way we <strong>build our brand</strong>. It’s <strong>not just an agency</strong> — it’s a <strong>powerful partner</strong> that <strong>delivers real results</strong>.",
-  "quote_cite": "Sean Higgins",
-  "quote_role": "CTO, Interia",
+  "quote_content": "Christopher Scarrott is a distinguished expert in the field of composite materials. With a career spanning several decades, he has been at the forefront of composite technology, leading Research & Development departments and driving innovation for major industry players.<br/><br/>His passion for composites is matched only by his dedication to mentoring the next generation of engineers and technicians. Christopher has trained numerous teams, imparting the in-depth knowledge and practical skills necessary to excel in this demanding field. His hands-on approach and deep understanding of both materials and processes have made him a trusted and respected leader.<br/><br/>After years of heading up successful teams and projects, Christopher founded Scarrott Composite Solutions to offer his expertise to a wider audience. He is dedicated to helping businesses overcome their challenges, optimize their processes, and achieve groundbreaking results.",
+  "quote_cite": "Christopher Scarrott",
+  "quote_role": "Founder, Scarrott Composite Solutions",
   "quote_image": "/content-images/quote-man.avif",
   "faq_title": "Frequently Asked Questions"
 }

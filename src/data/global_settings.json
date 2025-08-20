@@ -1,57 +1,35 @@
 {
-  "title": "blackspike astro landing page",
-  "description": "A free Astro landing theme made with Tailwind",
+  "title": "Scarrott Composite Solutions",
+  "description": "Unlocking Innovation in Composites",
   "social_image": "/1200x630.jpg",
   "base_url": "https://astro-theme.blackspike.com",
-  "demo": {
-    "title": "Need design?",
-    "content": "<strong>Get a guided tour through our services</strong>, and find out how you and your team can change the way you work, forever.",
-    "cta": "Book a call"
-  },
   "theme_color": "#18181b",
   "nav": [
     {
       "title": "Services",
-      "link": "/#services"
+      "link": "#services"
     },
     {
-      "title": "Case studies",
-      "link": "/#case-studies"
+      "title": "About",
+      "link": "#about"
     },
     {
-      "title": "Pricing",
-      "link": "/#pricing"
-    },
-    {
-      "title": "FAQ",
-      "link": "/#faq"
-    },
-    {
-      "title": "Newsletter",
-      "link": "/#newsletter"
+      "title": "Contact",
+      "link": "#newsletter"
     }
   ],
-
   "social_links": [
     {
-      "title": "Twitter / X",
-      "link": "https://x.com/blackspikeltd/"
+      "title": "Email",
+      "link": "mailto:chris.scarrott@example.com"
     },
     {
-      "title": "Mastodon",
-      "link": "https://mastodon.cloud/@blackspike"
-    },
-    {
-      "title": "GitHub",
-      "link": "https://github.com/blackspike/"
+      "title": "Phone",
+      "link": "tel:+1-555-555-5555"
     },
     {
       "title": "LinkedIn",
-      "link": "https://www.linkedin.com/company/blackspike"
-    },
-    {
-      "title": "Bluesky",
-      "link": "https://bsky.app/profile/blackspike.com/"
+      "link": "https://www.linkedin.com/in/christopherscarrott-placeholder"
     }
   ]
 }
