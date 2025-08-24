@@ -64,7 +64,7 @@ Created by blackspike [blackspike design](https://www.blackspike.com) – a web 
 
 This project uses a **Ports and Adapters** pattern (also known as Hexagonal Architecture) to separate the core application logic from external services and data sources. This makes the application more modular, easier to test, and simpler to maintain.
 
-The key idea is to define "ports" (interfaces) that our application components use, and then create "adapters" that implement these interfaces to connect to external systems (like an API, a database, or even mock data).
+The key idea is to define "ports" (interfaces with their associated Data Transfer Objects or DTOs) that our application components use, and then create "adapters" that implement these interfaces to connect to external systems.
 
 All adapters are located in the `src/lib/adapters/` directory.
 
@@ -72,14 +72,17 @@ All adapters are located in the `src/lib/adapters/` directory.
 
 Each feature that interacts with an external data source follows a consistent structure. Let's use the `auth` feature as an example:
 
--   **The Port (Interface):** `src/lib/adapters/auth/interface.ts`
-    This file defines the `Auth` interface. It specifies the contract that any authentication adapter must follow. Application components (like Astro pages) will depend on this interface, not on a specific implementation.
+-   **The Port (Interface and DTO):** `src/lib/adapters/auth/interface.ts`
+    This file defines the `Auth` interface and the `User` DTO. It specifies the contract that any authentication adapter must follow. Application components (like Astro pages) will depend on these application-specific types, not on the data structures of any external service.
 
 -   **The Client:** `src/lib/adapters/auth/mockAuthClient.ts`
-    The client is responsible for the low-level details of communicating with the external service. In this case, it returns mock data. A real-world application might have a `firebaseAuthClient.ts` or a `restApiAuthClient.ts` that makes actual network requests.
+    The client is responsible for the low-level details of communicating with the external service and returning its raw data. It is completely ignorant of the application's internal DTOs.
 
 -   **The Adapter:** `src/lib/adapters/auth/authAdapter.ts`
-    The adapter is the bridge between the client and the application. It implements the `Auth` interface and uses a client to get the data. It also exports a `getAuthAdapter()` function that Astro components can use to get an instance of the adapter.
+    The adapter is the bridge between the client and the application. Its primary responsibility is to:
+    1.  Call the client to fetch raw data.
+    2.  **Translate that raw data into the application's DTO (`User`).**
+    3.  Implement the `Auth` interface, returning the DTO to the application.
 
 ### How to Add a New Adapter
 
@@ -88,15 +91,15 @@ When you need to connect to a new data source (for example, a chat service), fol
 1.  **Create a New Directory:**
     Create a new directory for your feature under `src/lib/adapters/`. For a chat feature, this would be `src/lib/adapters/chat/`.
 
-2.  **Define the Interface (the Port):**
-    Create an `interface.ts` file inside your new directory (`src/lib/adapters/chat/interface.ts`). Define an interface that describes the interactions your application needs.
+2.  **Define the Interface and DTO (the Port):**
+    Create an `interface.ts` file inside your new directory. Define the DTO for your data (`ChatMessage`) and the interface for the actions (`Chat`).
 
     ```typescript
     // src/lib/adapters/chat/interface.ts
-    export interface ChatMessage {
+    export interface ChatMessage { // This is the DTO
       id: string;
-      text: string;
-      author: string;
+      message: string; // Use application-specific naming
+      from: string;
     }
 
     export interface Chat {
@@ -106,39 +109,49 @@ When you need to connect to a new data source (for example, a chat service), fol
     ```
 
 3.  **Create a Client:**
-    Create a client file that handles the actual data fetching. You can start with a mock client.
+    Create a client file that handles the actual data fetching. It should return raw data, not DTOs.
 
     ```typescript
     // src/lib/adapters/chat/mockChatClient.ts
-    import type { ChatMessage } from './interface';
+    // This client returns data in a "raw" format, with different naming.
+    const rawMessages = [
+      { msg_id: '1', msg_text: 'Hello!', author_name: 'Jules' }
+    ];
 
     export class MockChatClient {
-      async getMessages(): Promise<ChatMessage[]> {
-        return Promise.resolve([{ id: '1', text: 'Hello!', author: 'Jules' }]);
+      async getRawMessages() {
+        return Promise.resolve(rawMessages);
       }
-      async sendMessage(text: string): Promise<void> {
-        console.log(`Message sent: ${text}`);
-        return Promise.resolve();
+      async postMessage(text: string) {
+        console.log(`Message sent to external service: ${text}`);
+        return Promise.resolve({ success: true });
       }
     }
     ```
 
-4.  **Create the Adapter:**
-    Create an adapter file that implements the interface and uses the client.
+4.  **Create the Adapter (and Translate):**
+    Create an adapter file that implements the interface. This is where you translate the raw data from the client into your application's DTO.
 
     ```typescript
     // src/lib/adapters/chat/chatAdapter.ts
-    import type { Chat } from './interface';
+    import type { Chat, ChatMessage } from './interface';
     import { MockChatClient } from './mockChatClient';
 
     const client = new MockChatClient();
 
     class ChatAdapter implements Chat {
-      async getMessages() {
-        return client.getMessages();
+      async getMessages(): Promise<ChatMessage[]> {
+        const rawMessages = await client.getRawMessages();
+        // Translate raw data to an array of ChatMessage DTOs
+        const messages: ChatMessage[] = rawMessages.map(rawMsg => ({
+          id: rawMsg.msg_id,
+          message: rawMsg.msg_text,
+          from: rawMsg.author_name,
+        }));
+        return messages;
       }
       async sendMessage(text: string) {
-        return client.sendMessage(text);
+        await client.postMessage(text);
       }
     }
 
@@ -148,7 +161,7 @@ When you need to connect to a new data source (for example, a chat service), fol
     ```
 
 5.  **Use the Adapter in Your Components:**
-    Finally, in your Astro or Vue components, import and use your new adapter.
+    Finally, in your Astro components, import and use your new adapter. The component will receive clean, predictable DTOs.
 
     ```astro
     ---
@@ -156,12 +169,10 @@ When you need to connect to a new data source (for example, a chat service), fol
     import { getChatAdapter } from '../lib/adapters/chat/chatAdapter';
 
     const chat = getChatAdapter();
-    const messages = await chat.getMessages();
+    const messages = await chat.getMessages(); // messages are ChatMessage[]
     ---
     <!-- Your component HTML here -->
     ```
-
-By following this pattern, you can easily swap the `MockChatClient` for a real one that talks to an API, without having to change any of the code in your components.
 
 ## Previews
 

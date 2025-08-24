@@ -1,8 +1,6 @@
 import type { Auth, User } from './interface';
 import { MockAuthClient } from './mockAuthClient';
 
-// In a real app, you might have other clients like a real API client.
-// const client = new RealAuthApiClient();
 const client = new MockAuthClient();
 
 class AuthAdapter implements Auth {
@@ -11,7 +9,20 @@ class AuthAdapter implements Auth {
   }
 
   async getUser(): Promise<User | null> {
-    return Promise.resolve(client.getUser());
+    const rawUser = client.getRawUser();
+
+    // If there's no user, return null.
+    if (!rawUser) {
+      return Promise.resolve(null);
+    }
+
+    // Translate the raw data from the client into the application's User DTO.
+    const userDto: User = {
+      name: rawUser.user_name,
+      email: rawUser.user_email,
+    };
+
+    return Promise.resolve(userDto);
   }
 
   getLogInUrl(): string {
