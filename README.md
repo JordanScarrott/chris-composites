@@ -20,6 +20,7 @@ Now available as an official Astro theme! [Download it from the Astro themes pag
   - [Astro 5 Features](#astro-5-features)
   - [CSS & HTML Features](#css--html-features)
   - [JS Features](#js-features)
+- [Architecture](#architecture)
 - [Previews](#previews)
 - [Credits](#credits)
 - [Tags](#tags)
@@ -58,6 +59,96 @@ Created by blackspike [blackspike design](https://www.blackspike.com) – a web 
 ### JS Features
 
 - [swiper.js](https://swiperjs.com/) carousel
+
+## Architecture
+
+This project uses a **Ports and Adapters** pattern (also known as Hexagonal Architecture) to separate the core application logic from external services and data sources. This makes the application more modular, easier to test, and simpler to maintain.
+
+The key idea is to define "ports" (interfaces and their associated DTOs) that our application uses, and then create "adapters" that implement these interfaces to connect to external systems.
+
+-   **Adapters** are located in `src/lib/adapters/`.
+-   **Data Transfer Objects (DTOs)** are centralized in `src/lib/shared/dtos/`.
+
+### The Anatomy of an Adapter
+
+Each feature that interacts with an external data source follows a consistent structure. Let's use the `auth` feature as an example:
+
+-   **The DTO:** `src/lib/shared/dtos/user.dto.ts`
+    This file defines the `User` DTO. DTOs are application-specific data structures. They are kept separate from adapters to allow them to be shared across different parts of the application.
+
+-   **The Port (Interface):** `src/lib/adapters/auth/interface.ts`
+    This file defines the `Auth` interface. It imports the `User` DTO and uses it in its contract. It specifies the actions the application can perform.
+
+-   **The Client:** `src/lib/adapters/auth/mockAuthClient.ts`
+    The client is responsible for the low-level details of communicating with the external service and returning its raw data. It is completely ignorant of the application's internal DTOs.
+
+-   **The Adapter:** `src/lib/adapters/auth/authAdapter.ts`
+    The adapter is the bridge between the client and the application. Its primary responsibility is to:
+    1.  Call the client to fetch raw data.
+    2.  **Translate that raw data into the application's DTO (`User`).**
+    3.  Implement the `Auth` interface, returning the DTO to the application.
+
+### How to Add a New Adapter
+
+When you need to connect to a new data source (for example, a chat service), follow these steps:
+
+1.  **Define the DTO:**
+    First, create the DTO for your feature in the shared directory.
+
+    ```typescript
+    // src/lib/shared/dtos/chat.dto.ts
+    export interface ChatMessage {
+      id: string;
+      message: string;
+      from: string;
+    }
+    ```
+
+2.  **Create the Adapter Directory:**
+    Create a new directory for your feature under `src/lib/adapters/`. For a chat feature, this would be `src/lib/adapters/chat/`.
+
+3.  **Define the Interface (the Port):**
+    Create an `interface.ts` file inside your new directory. Import your DTO and define the interface for the actions.
+
+    ```typescript
+    // src/lib/adapters/chat/interface.ts
+    import type { ChatMessage } from '../../shared/dtos/chat.dto';
+    export type { ChatMessage }; // Re-export for convenience
+
+    export interface Chat {
+      getMessages(): Promise<ChatMessage[]>;
+      sendMessage(text: string): Promise<void>;
+    }
+    ```
+
+4.  **Create a Client:**
+    Create a client file that handles the actual data fetching. It should return raw data, not DTOs.
+
+    ```typescript
+    // src/lib/adapters/chat/mockChatClient.ts
+    const rawMessages = [{ msg_id: '1', msg_text: 'Hello!', author_name: 'Jules' }];
+    export class MockChatClient { /* ... */ }
+    ```
+
+5.  **Create the Adapter (and Translate):**
+    Create an adapter file that implements the interface. This is where you import your DTO and translate the raw data from the client into it.
+
+    ```typescript
+    // src/lib/adapters/chat/chatAdapter.ts
+    import type { Chat, ChatMessage } from './interface';
+    import { MockChatClient } from './mockChatClient';
+    // No need to import the DTO directly, as it's exported from interface.ts
+
+    class ChatAdapter implements Chat {
+      async getMessages(): Promise<ChatMessage[]> {
+        // ... fetch raw messages and translate them to ChatMessage[]
+      }
+      /* ... */
+    }
+    ```
+
+6.  **Use the Adapter in Your Components:**
+    Finally, in your Astro components, import and use your new adapter. The component will receive clean, predictable DTOs.
 
 ## Previews
 

@@ -1,8 +1,13 @@
 ---
 
 import Logo from '../assets/theme-images/logo.svg'
+import { getAuthAdapter } from '../lib/adapters/auth/authAdapter';
 
 const { settings } = Astro.props
+
+const auth = getAuthAdapter();
+const isLoggedIn = await auth.isLoggedIn();
+const user = await auth.getUser();
 
 ---
 
@@ -32,10 +37,19 @@ const { settings } = Astro.props
 
     </nav>
 
-    <!-- CTA -->
-    <a href="#newsletter" class="min-w-32 bs-btn">
-      Contact Us
-    </a>
+    <!-- Auth Status -->
+    <div class="min-w-32">
+      {isLoggedIn && user ? (
+        <div class="flex items-center gap-4">
+          <span>{user.name}</span>
+          <a href={auth.getLogOutUrl()} class="bs-btn">Log Out</a>
+        </div>
+      ) : (
+        <a href={auth.getLogInUrl()} class="bs-btn">
+          Log In
+        </a>
+      )}
+    </div>
 
   </div>
 
