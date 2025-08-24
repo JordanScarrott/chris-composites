@@ -2,6 +2,7 @@
 
 import Logo from '../assets/theme-images/logo.svg'
 import { getAuthAdapter } from '../lib/adapters/auth/authAdapter';
+import Search from './Search.astro';
 
 const { settings } = Astro.props
 
@@ -38,7 +39,8 @@ const user = await auth.getUser();
     </nav>
 
     <!-- Auth Status -->
-    <div class="min-w-32">
+    <div class="min-w-32 flex items-center gap-4">
+      <Search />
       {isLoggedIn && user ? (
         <div class="flex items-center gap-4">
           <span>{user.name}</span>

@@ -6,8 +6,6 @@ import "../assets/css/typography.css"
 import "../assets/css/layout.css"
 import "../assets/css/buttons.css"
 
-import { Font } from 'astro:assets';
-
 import Image from "astro/components/Image.astro"
 import bg_image from "../assets/theme-images/hero-image.jpg"
 
@@ -42,9 +40,6 @@ const { title, description } = Astro.props
       property="og:image"
       content={ global_settings.base_url + global_settings.social_image }
     />
-
-    <Font cssVariable="--font-inter" preload />
-    <Font cssVariable="--font-inter-display" preload />
 
   </head>
 
