@@ -1,0 +1,45 @@
+---
+import type { Course } from '../lib/adapters/course/interface';
+
+interface Props {
+  course: Course;
+}
+
+const { course } = Astro.props;
+---
+
+<a href={`/courses/${course.slug}`} class="card">
+  <img src={course.image} alt={`Cover image for ${course.title}`} width="400" height="225" />
+  <div class="p-4">
+    <h3 class="text-lg font-bold">{course.title}</h3>
+    <p class="text-sm text-gray-600 mt-2">{course.description}</p>
+    <div class="mt-4">
+      {course.tags.map(tag => (
+        <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200 last:mr-0 mr-1">
+          #{tag}
+        </span>
+      ))}
+    </div>
+  </div>
+</a>
+
+<style>
+  .card {
+    display: block;
+    background: #fff;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+
+  .card:hover {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+</style>

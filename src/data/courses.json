@@ -1,0 +1,42 @@
+[
+  {
+    "id": "1",
+    "slug": "nextjs-full-course",
+    "title": "Next.js Full Course",
+    "description": "Master the fundamentals of Next.js 14 and the App Router",
+    "image": "/content-images/blackspike-wallpaper-01.avif",
+    "tags": ["react", "nextjs", "postgres", "pro"],
+    "author": "Jeff Delaney",
+    "publishedAt": "2024-11-20",
+    "whatYouWillLearn": [
+      "Everything you need to be productive with modern Next.js",
+      "Complex topics explained in 100 seconds",
+      "Design patterns with React Server Components (RSC)",
+      "How to choose optimal rendering strategies",
+      "Dynamic routing and project organization",
+      "Advanced data fetching and caching",
+      "User authentication with Auth.js",
+      "Data modeling with Postgres and Prisma",
+      "How to migrate from previous versions of Next.js"
+    ],
+    "whatYouWillBuild": "You will build a simple Social Media Platform inspired by sites like MySpace and Facebook where users can befriend each other. The goal of this project is to introduce you to Next’s rendering, data-fetching, and caching strategies.",
+    "chapters": [
+      {
+        "title": "Next.js Tutorial",
+        "description": "Next.js Basics Tutorial"
+      },
+      {
+        "title": "App Router",
+        "description": "Next.js App Router with Server Components"
+      },
+      {
+        "title": "Route Handlers",
+        "description": "Create API Endpoints with Route Handlers"
+      },
+      {
+        "title": "Layouts",
+        "description": "Sharing UI between pages with Layouts"
+      }
+    ]
+  }
+]
