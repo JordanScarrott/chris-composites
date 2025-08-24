@@ -20,6 +20,7 @@ Now available as an official Astro theme! [Download it from the Astro themes pag
   - [Astro 5 Features](#astro-5-features)
   - [CSS & HTML Features](#css--html-features)
   - [JS Features](#js-features)
+- [Architecture](#architecture)
 - [Previews](#previews)
 - [Credits](#credits)
 - [Tags](#tags)
@@ -58,6 +59,109 @@ Created by blackspike [blackspike design](https://www.blackspike.com) – a web 
 ### JS Features
 
 - [swiper.js](https://swiperjs.com/) carousel
+
+## Architecture
+
+This project uses a **Ports and Adapters** pattern (also known as Hexagonal Architecture) to separate the core application logic from external services and data sources. This makes the application more modular, easier to test, and simpler to maintain.
+
+The key idea is to define "ports" (interfaces) that our application components use, and then create "adapters" that implement these interfaces to connect to external systems (like an API, a database, or even mock data).
+
+All adapters are located in the `src/lib/adapters/` directory.
+
+### The Anatomy of an Adapter
+
+Each feature that interacts with an external data source follows a consistent structure. Let's use the `auth` feature as an example:
+
+-   **The Port (Interface):** `src/lib/adapters/auth/interface.ts`
+    This file defines the `Auth` interface. It specifies the contract that any authentication adapter must follow. Application components (like Astro pages) will depend on this interface, not on a specific implementation.
+
+-   **The Client:** `src/lib/adapters/auth/mockAuthClient.ts`
+    The client is responsible for the low-level details of communicating with the external service. In this case, it returns mock data. A real-world application might have a `firebaseAuthClient.ts` or a `restApiAuthClient.ts` that makes actual network requests.
+
+-   **The Adapter:** `src/lib/adapters/auth/authAdapter.ts`
+    The adapter is the bridge between the client and the application. It implements the `Auth` interface and uses a client to get the data. It also exports a `getAuthAdapter()` function that Astro components can use to get an instance of the adapter.
+
+### How to Add a New Adapter
+
+When you need to connect to a new data source (for example, a chat service), follow these steps:
+
+1.  **Create a New Directory:**
+    Create a new directory for your feature under `src/lib/adapters/`. For a chat feature, this would be `src/lib/adapters/chat/`.
+
+2.  **Define the Interface (the Port):**
+    Create an `interface.ts` file inside your new directory (`src/lib/adapters/chat/interface.ts`). Define an interface that describes the interactions your application needs.
+
+    ```typescript
+    // src/lib/adapters/chat/interface.ts
+    export interface ChatMessage {
+      id: string;
+      text: string;
+      author: string;
+    }
+
+    export interface Chat {
+      getMessages(): Promise<ChatMessage[]>;
+      sendMessage(text: string): Promise<void>;
+    }
+    ```
+
+3.  **Create a Client:**
+    Create a client file that handles the actual data fetching. You can start with a mock client.
+
+    ```typescript
+    // src/lib/adapters/chat/mockChatClient.ts
+    import type { ChatMessage } from './interface';
+
+    export class MockChatClient {
+      async getMessages(): Promise<ChatMessage[]> {
+        return Promise.resolve([{ id: '1', text: 'Hello!', author: 'Jules' }]);
+      }
+      async sendMessage(text: string): Promise<void> {
+        console.log(`Message sent: ${text}`);
+        return Promise.resolve();
+      }
+    }
+    ```
+
+4.  **Create the Adapter:**
+    Create an adapter file that implements the interface and uses the client.
+
+    ```typescript
+    // src/lib/adapters/chat/chatAdapter.ts
+    import type { Chat } from './interface';
+    import { MockChatClient } from './mockChatClient';
+
+    const client = new MockChatClient();
+
+    class ChatAdapter implements Chat {
+      async getMessages() {
+        return client.getMessages();
+      }
+      async sendMessage(text: string) {
+        return client.sendMessage(text);
+      }
+    }
+
+    export function getChatAdapter(): Chat {
+      return new ChatAdapter();
+    }
+    ```
+
+5.  **Use the Adapter in Your Components:**
+    Finally, in your Astro or Vue components, import and use your new adapter.
+
+    ```astro
+    ---
+    // src/components/ChatComponent.astro
+    import { getChatAdapter } from '../lib/adapters/chat/chatAdapter';
+
+    const chat = getChatAdapter();
+    const messages = await chat.getMessages();
+    ---
+    <!-- Your component HTML here -->
+    ```
+
+By following this pattern, you can easily swap the `MockChatClient` for a real one that talks to an API, without having to change any of the code in your components.
 
 ## Previews
 
