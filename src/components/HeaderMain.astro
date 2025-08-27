@@ -2,6 +2,7 @@
 
 import Logo from '../assets/theme-images/logo.svg'
 import { getAuthAdapter } from '../lib/adapters/auth/authAdapter';
+import Search from './Search.astro';
 
 const { settings } = Astro.props
 
@@ -37,14 +38,27 @@ const user = await auth.getUser();
 
     </nav>
 
-    <!-- CTAs -->
-    <div class="flex items-center gap-2">
-      <a href="/login" class="bs-btn !bg-transparent before:translate-y-full hover:before:translate-y-0">
-        Sign In
-      </a>
-      <a href="#newsletter" class="min-w-32 bs-btn">
-        Contact Us
-      </a>
+    <!-- Auth Status -->
+    <div class="min-w-32 flex items-center gap-4">
+      <Search />
+      {isLoggedIn && user ? (
+        <div class="flex items-center gap-4">
+          <span>{user.name}</span>
+          <a href={auth.getLogOutUrl()} class="bs-btn">Log Out</a>
+        </div>
+      ) : (
+        <a href={auth.getLogInUrl()} class="bs-btn">
+          Log In
+        </a>
+      )}
+      <!-- CTAs -->
+      <div class="flex items-center gap-2">
+        <a href="/login" class="bs-btn !bg-transparent before:translate-y-full hover:before:translate-y-0">
+          Sign In
+        </a>
+        <a href="#newsletter" class="min-w-32 bs-btn">
+          Contact Us
+        </a>
     </div>
 
   </div>
