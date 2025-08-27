@@ -1,0 +1,40 @@
+[
+  {
+    "id": "1",
+    "slug": "composites-101",
+    "title": "Composites 101: The Fundamentals",
+    "description": "An introductory course on the fundamentals of composite materials, from theory to practical application.",
+    "image": "/content-images/blackspike-wallpaper-02.avif",
+    "tags": ["composites", "materials", "engineering", "beginner"],
+    "author": "Dr. Evelyn Reed",
+    "publishedAt": "2024-08-24",
+    "whatYouWillLearn": [
+      "The fundamental principles of composite materials.",
+      "Different types of fibers and resins and their properties.",
+      "The most common manufacturing processes for composites.",
+      "How to design and analyze a simple composite structure.",
+      "The importance of quality control in composites manufacturing.",
+      "Safety procedures for handling composite materials.",
+      "Real-world applications of composites in various industries."
+    ],
+    "whatYouWillBuild": "You will design and create a small composite part, such as a phone case or a drone propeller, from scratch. This project will take you through the entire process, from material selection and mold design to layup, curing, and finishing.",
+    "chapters": [
+      {
+        "title": "Introduction to Composite Materials",
+        "description": "What are composites and why are they important?"
+      },
+      {
+        "title": "Fibers and Resins",
+        "description": "A deep dive into the building blocks of composites."
+      },
+      {
+        "title": "Manufacturing Processes",
+        "description": "An overview of the most common manufacturing techniques."
+      },
+      {
+        "title": "Design and Analysis",
+        "description": "How to design and analyze a simple composite structure."
+      }
+    ]
+  }
+]

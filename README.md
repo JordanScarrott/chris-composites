@@ -14,17 +14,17 @@ Now available as an official Astro theme! [Download it from the Astro themes pag
 
 ## Table of Contents
 
-- [Live Demo](#live-demo-httpsastro-themeblackspikecom)
-- [License](#license)
-- [Features](#features)
-  - [Astro 5 Features](#astro-5-features)
-  - [CSS & HTML Features](#css--html-features)
-  - [JS Features](#js-features)
-- [Architecture](#architecture)
-- [Previews](#previews)
-- [Credits](#credits)
-- [Tags](#tags)
-- [Commands](#commands)
+-   [Live Demo](#live-demo-httpsastro-themeblackspikecom)
+-   [License](#license)
+-   [Features](#features)
+    -   [Astro 5 Features](#astro-5-features)
+    -   [CSS & HTML Features](#css--html-features)
+    -   [JS Features](#js-features)
+-   [Architecture](#architecture)
+-   [Previews](#previews)
+-   [Credits](#credits)
+-   [Tags](#tags)
+-   [Commands](#commands)
 
 ## Live demo https://astro-theme.blackspike.com
 
@@ -40,25 +40,25 @@ Created by blackspike [blackspike design](https://www.blackspike.com) – a web 
 
 ### Astro 5 Features
 
-- [Image component](https://docs.astro.build/en/guides/images/#display-optimized-images-with-the-image--component) for optimised AVIF images
-- All-[JSX](https://docs.astro.build/en/reference/astro-syntax/) native astro components
-- SVGs imported as [SVG components](https://docs.astro.build/en/guides/images/#svg-components)
-- JSON-powered content (easy to edit UI text or hook up a CMS!)
-- Experimental [Fonts API](https://docs.astro.build/en/reference/experimental-flags/fonts/)
+-   [Image component](https://docs.astro.build/en/guides/images/#display-optimized-images-with-the-image--component) for optimised AVIF images
+-   All-[JSX](https://docs.astro.build/en/reference/astro-syntax/) native astro components
+-   SVGs imported as [SVG components](https://docs.astro.build/en/guides/images/#svg-components)
+-   JSON-powered content (easy to edit UI text or hook up a CMS!)
+-   Experimental [Fonts API](https://docs.astro.build/en/reference/experimental-flags/fonts/)
 
 ### CSS & HTML Features
 
-- [Tailwind 4](https://tailwindcss.com/blog/tailwindcss-v4)
-- HTML modal dialog
-- JS-free scroll-linked animations
-- JS-free exclusive accordions with details/summary (animated!)
-- Container queries
-- Linear easing for bouncing / springing
-- Text wrap pretty / balance
+-   [Tailwind 4](https://tailwindcss.com/blog/tailwindcss-v4)
+-   HTML modal dialog
+-   JS-free scroll-linked animations
+-   JS-free exclusive accordions with details/summary (animated!)
+-   Container queries
+-   Linear easing for bouncing / springing
+-   Text wrap pretty / balance
 
 ### JS Features
 
-- [swiper.js](https://swiperjs.com/) carousel
+-   [swiper.js](https://swiperjs.com/) carousel
 
 ## Architecture
 
@@ -96,15 +96,16 @@ When you need to connect to a new data source (for example, a chat service), fol
 
     ```typescript
     // src/lib/adapters/chat/interface.ts
-    export interface ChatMessage { // This is the DTO
-      id: string;
-      message: string; // Use application-specific naming
-      from: string;
+    export interface ChatMessage {
+        // This is the DTO
+        id: string;
+        message: string; // Use application-specific naming
+        from: string;
     }
 
     export interface Chat {
-      getMessages(): Promise<ChatMessage[]>;
-      sendMessage(text: string): Promise<void>;
+        getMessages(): Promise<ChatMessage[]>;
+        sendMessage(text: string): Promise<void>;
     }
     ```
 
@@ -115,17 +116,17 @@ When you need to connect to a new data source (for example, a chat service), fol
     // src/lib/adapters/chat/mockChatClient.ts
     // This client returns data in a "raw" format, with different naming.
     const rawMessages = [
-      { msg_id: '1', msg_text: 'Hello!', author_name: 'Jules' }
+        { msg_id: "1", msg_text: "Hello!", author_name: "Jules" },
     ];
 
     export class MockChatClient {
-      async getRawMessages() {
-        return Promise.resolve(rawMessages);
-      }
-      async postMessage(text: string) {
-        console.log(`Message sent to external service: ${text}`);
-        return Promise.resolve({ success: true });
-      }
+        async getRawMessages() {
+            return Promise.resolve(rawMessages);
+        }
+        async postMessage(text: string) {
+            console.log(`Message sent to external service: ${text}`);
+            return Promise.resolve({ success: true });
+        }
     }
     ```
 
@@ -134,29 +135,29 @@ When you need to connect to a new data source (for example, a chat service), fol
 
     ```typescript
     // src/lib/adapters/chat/chatAdapter.ts
-    import type { Chat, ChatMessage } from './interface';
-    import { MockChatClient } from './mockChatClient';
+    import type { Chat, ChatMessage } from "./interface";
+    import { MockChatClient } from "./mockChatClient";
 
     const client = new MockChatClient();
 
     class ChatAdapter implements Chat {
-      async getMessages(): Promise<ChatMessage[]> {
-        const rawMessages = await client.getRawMessages();
-        // Translate raw data to an array of ChatMessage DTOs
-        const messages: ChatMessage[] = rawMessages.map(rawMsg => ({
-          id: rawMsg.msg_id,
-          message: rawMsg.msg_text,
-          from: rawMsg.author_name,
-        }));
-        return messages;
-      }
-      async sendMessage(text: string) {
-        await client.postMessage(text);
-      }
+        async getMessages(): Promise<ChatMessage[]> {
+            const rawMessages = await client.getRawMessages();
+            // Translate raw data to an array of ChatMessage DTOs
+            const messages: ChatMessage[] = rawMessages.map((rawMsg) => ({
+                id: rawMsg.msg_id,
+                message: rawMsg.msg_text,
+                from: rawMsg.author_name,
+            }));
+            return messages;
+        }
+        async sendMessage(text: string) {
+            await client.postMessage(text);
+        }
     }
 
     export function getChatAdapter(): Chat {
-      return new ChatAdapter();
+        return new ChatAdapter();
     }
     ```
 
@@ -188,11 +189,11 @@ When you need to connect to a new data source (for example, a chat service), fol
 
 ## Credits
 
-- Fake logos by [uicontent.co](https://uicontent.co/svg-dummy-logo/)
-- Quote avatar person by [thispersondoesnotexist.com](https://thispersondoesnotexist.com/)
-- Misc icons and logo from [icones.js.org](https://icones.js.org/) by [@antfu](https://github.com/antfu)
-- Carousel powered by [swiperjs.com](https://swiperjs.com/)
-- Inter font by [rsms.me](https://rsms.me/inter/)
+-   Fake logos by [uicontent.co](https://uicontent.co/svg-dummy-logo/)
+-   Quote avatar person by [thispersondoesnotexist.com](https://thispersondoesnotexist.com/)
+-   Misc icons and logo from [icones.js.org](https://icones.js.org/) by [@antfu](https://github.com/antfu)
+-   Carousel powered by [swiperjs.com](https://swiperjs.com/)
+-   Inter font by [rsms.me](https://rsms.me/inter/)
 
 ## Tags
 
@@ -202,8 +203,8 @@ When you need to connect to a new data source (for example, a chat service), fol
 
 All commands are run from the root of the project, from a terminal. This project uses `pnpm` as the package manager.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
+| Command                    | Action                                           |
+| :------------------------- | :----------------------------------------------- |
 | `pnpm install`             | Installs dependencies                            |
 | `pnpm run dev`             | Starts local dev server at `localhost:4321`      |
 | `pnpm run build`           | Build your production site to `./dist/`          |

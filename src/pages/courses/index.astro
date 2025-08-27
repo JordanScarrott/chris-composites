@@ -1,0 +1,25 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { courseAdapter } from '../../lib/adapters/course/courseAdapter';
+import CourseCard from '../../components/CourseCard.astro';
+
+const courses = await courseAdapter.getAllCourses();
+---
+
+<Layout title="Courses">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-center mb-8">Courses</h1>
+    <p class="text-xl text-center text-gray-600 mb-12">Challenging multi-step experiences with quizzes and progress-tracking</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {courses.map(course => (
+        <CourseCard course={course} />
+      ))}
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .container {
+    max-width: 1200px;
+  }
+</style>
