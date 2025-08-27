@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
-import case_studies from '../../data/case_studies.json';
-import courses from '../../data/courses.json';
+import case_studies from '../data/case_studies.json';
+import courses from '../data/courses.json';
 
 // Helper function to strip HTML tags
 const stripHtml = (html: string) => html.replace(/<[^>]*>?/gm, '');
