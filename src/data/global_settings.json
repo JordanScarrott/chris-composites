@@ -6,6 +6,10 @@
   "theme_color": "#18181b",
   "nav": [
     {
+      "title": "Courses",
+      "link": "/courses"
+    },
+    {
       "title": "Services",
       "link": "#services"
     },
