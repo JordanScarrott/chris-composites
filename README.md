@@ -14,17 +14,17 @@ Now available as an official Astro theme! [Download it from the Astro themes pag
 
 ## Table of Contents
 
-- [Live Demo](#live-demo-httpsastro-themeblackspikecom)
-- [License](#license)
-- [Features](#features)
-  - [Astro 5 Features](#astro-5-features)
-  - [CSS & HTML Features](#css--html-features)
-  - [JS Features](#js-features)
-- [Architecture](#architecture)
-- [Previews](#previews)
-- [Credits](#credits)
-- [Tags](#tags)
-- [Commands](#commands)
+-   [Live Demo](#live-demo-httpsastro-themeblackspikecom)
+-   [License](#license)
+-   [Features](#features)
+    -   [Astro 5 Features](#astro-5-features)
+    -   [CSS & HTML Features](#css--html-features)
+    -   [JS Features](#js-features)
+-   [Architecture](#architecture)
+-   [Previews](#previews)
+-   [Credits](#credits)
+-   [Tags](#tags)
+-   [Commands](#commands)
 
 ## Live demo https://astro-theme.blackspike.com
 
@@ -40,44 +40,40 @@ Created by blackspike [blackspike design](https://www.blackspike.com) – a web 
 
 ### Astro 5 Features
 
-- [Image component](https://docs.astro.build/en/guides/images/#display-optimized-images-with-the-image--component) for optimised AVIF images
-- All-[JSX](https://docs.astro.build/en/reference/astro-syntax/) native astro components
-- SVGs imported as [SVG components](https://docs.astro.build/en/guides/images/#svg-components)
-- JSON-powered content (easy to edit UI text or hook up a CMS!)
-- Experimental [Fonts API](https://docs.astro.build/en/reference/experimental-flags/fonts/)
+-   [Image component](https://docs.astro.build/en/guides/images/#display-optimized-images-with-the-image--component) for optimised AVIF images
+-   All-[JSX](https://docs.astro.build/en/reference/astro-syntax/) native astro components
+-   SVGs imported as [SVG components](https://docs.astro.build/en/guides/images/#svg-components)
+-   JSON-powered content (easy to edit UI text or hook up a CMS!)
+-   Experimental [Fonts API](https://docs.astro.build/en/reference/experimental-flags/fonts/)
 
 ### CSS & HTML Features
 
-- [Tailwind 4](https://tailwindcss.com/blog/tailwindcss-v4)
-- HTML modal dialog
-- JS-free scroll-linked animations
-- JS-free exclusive accordions with details/summary (animated!)
-- Container queries
-- Linear easing for bouncing / springing
-- Text wrap pretty / balance
+-   [Tailwind 4](https://tailwindcss.com/blog/tailwindcss-v4)
+-   HTML modal dialog
+-   JS-free scroll-linked animations
+-   JS-free exclusive accordions with details/summary (animated!)
+-   Container queries
+-   Linear easing for bouncing / springing
+-   Text wrap pretty / balance
 
 ### JS Features
 
-- [swiper.js](https://swiperjs.com/) carousel
+-   [swiper.js](https://swiperjs.com/) carousel
 
 ## Architecture
 
 This project uses a **Ports and Adapters** pattern (also known as Hexagonal Architecture) to separate the core application logic from external services and data sources. This makes the application more modular, easier to test, and simpler to maintain.
 
-The key idea is to define "ports" (interfaces and their associated DTOs) that our application uses, and then create "adapters" that implement these interfaces to connect to external systems.
+The key idea is to define "ports" (interfaces with their associated Data Transfer Objects or DTOs) that our application components use, and then create "adapters" that implement these interfaces to connect to external systems.
 
--   **Adapters** are located in `src/lib/adapters/`.
--   **Data Transfer Objects (DTOs)** are centralized in `src/lib/shared/dtos/`.
+All adapters are located in the `src/lib/adapters/` directory.
 
 ### The Anatomy of an Adapter
 
 Each feature that interacts with an external data source follows a consistent structure. Let's use the `auth` feature as an example:
 
--   **The DTO:** `src/lib/shared/dtos/user.dto.ts`
-    This file defines the `User` DTO. DTOs are application-specific data structures. They are kept separate from adapters to allow them to be shared across different parts of the application.
-
--   **The Port (Interface):** `src/lib/adapters/auth/interface.ts`
-    This file defines the `Auth` interface. It imports the `User` DTO and uses it in its contract. It specifies the actions the application can perform.
+-   **The Port (Interface and DTO):** `src/lib/adapters/auth/interface.ts`
+    This file defines the `Auth` interface and the `User` DTO. It specifies the contract that any authentication adapter must follow. Application components (like Astro pages) will depend on these application-specific types, not on the data structures of any external service.
 
 -   **The Client:** `src/lib/adapters/auth/mockAuthClient.ts`
     The client is responsible for the low-level details of communicating with the external service and returning its raw data. It is completely ignorant of the application's internal DTOs.
@@ -92,63 +88,92 @@ Each feature that interacts with an external data source follows a consistent st
 
 When you need to connect to a new data source (for example, a chat service), follow these steps:
 
-1.  **Define the DTO:**
-    First, create the DTO for your feature in the shared directory.
-
-    ```typescript
-    // src/lib/shared/dtos/chat.dto.ts
-    export interface ChatMessage {
-      id: string;
-      message: string;
-      from: string;
-    }
-    ```
-
-2.  **Create the Adapter Directory:**
+1.  **Create a New Directory:**
     Create a new directory for your feature under `src/lib/adapters/`. For a chat feature, this would be `src/lib/adapters/chat/`.
 
-3.  **Define the Interface (the Port):**
-    Create an `interface.ts` file inside your new directory. Import your DTO and define the interface for the actions.
+2.  **Define the Interface and DTO (the Port):**
+    Create an `interface.ts` file inside your new directory. Define the DTO for your data (`ChatMessage`) and the interface for the actions (`Chat`).
 
     ```typescript
     // src/lib/adapters/chat/interface.ts
-    import type { ChatMessage } from '../../shared/dtos/chat.dto';
-    export type { ChatMessage }; // Re-export for convenience
+    export interface ChatMessage {
+        // This is the DTO
+        id: string;
+        message: string; // Use application-specific naming
+        from: string;
+    }
 
     export interface Chat {
-      getMessages(): Promise<ChatMessage[]>;
-      sendMessage(text: string): Promise<void>;
+        getMessages(): Promise<ChatMessage[]>;
+        sendMessage(text: string): Promise<void>;
     }
     ```
 
-4.  **Create a Client:**
+3.  **Create a Client:**
     Create a client file that handles the actual data fetching. It should return raw data, not DTOs.
 
     ```typescript
     // src/lib/adapters/chat/mockChatClient.ts
-    const rawMessages = [{ msg_id: '1', msg_text: 'Hello!', author_name: 'Jules' }];
-    export class MockChatClient { /* ... */ }
-    ```
+    // This client returns data in a "raw" format, with different naming.
+    const rawMessages = [
+        { msg_id: "1", msg_text: "Hello!", author_name: "Jules" },
+    ];
 
-5.  **Create the Adapter (and Translate):**
-    Create an adapter file that implements the interface. This is where you import your DTO and translate the raw data from the client into it.
-
-    ```typescript
-    // src/lib/adapters/chat/chatAdapter.ts
-    import type { Chat, ChatMessage } from './interface';
-    import { MockChatClient } from './mockChatClient';
-    // No need to import the DTO directly, as it's exported from interface.ts
-
-    class ChatAdapter implements Chat {
-      async getMessages(): Promise<ChatMessage[]> {
-        // ... fetch raw messages and translate them to ChatMessage[]
-      }
-      /* ... */
+    export class MockChatClient {
+        async getRawMessages() {
+            return Promise.resolve(rawMessages);
+        }
+        async postMessage(text: string) {
+            console.log(`Message sent to external service: ${text}`);
+            return Promise.resolve({ success: true });
+        }
     }
     ```
 
-6.  **Use the Adapter in Your Components:**
+4.  **Create the Adapter (and Translate):**
+    Create an adapter file that implements the interface. This is where you translate the raw data from the client into your application's DTO.
+
+    ```typescript
+    // src/lib/adapters/chat/chatAdapter.ts
+    import type { Chat, ChatMessage } from "./interface";
+    import { MockChatClient } from "./mockChatClient";
+
+    const client = new MockChatClient();
+
+    class ChatAdapter implements Chat {
+        async getMessages(): Promise<ChatMessage[]> {
+            const rawMessages = await client.getRawMessages();
+            // Translate raw data to an array of ChatMessage DTOs
+            const messages: ChatMessage[] = rawMessages.map((rawMsg) => ({
+                id: rawMsg.msg_id,
+                message: rawMsg.msg_text,
+                from: rawMsg.author_name,
+            }));
+            return messages;
+        }
+        async sendMessage(text: string) {
+            await client.postMessage(text);
+        }
+    }
+
+    export function getChatAdapter(): Chat {
+        return new ChatAdapter();
+    }
+    ```
+
+5.  **Use the Adapter in Your Components:**
     Finally, in your Astro components, import and use your new adapter. The component will receive clean, predictable DTOs.
+
+    ```astro
+    ---
+    // src/components/ChatComponent.astro
+    import { getChatAdapter } from '../lib/adapters/chat/chatAdapter';
+
+    const chat = getChatAdapter();
+    const messages = await chat.getMessages(); // messages are ChatMessage[]
+    ---
+    <!-- Your component HTML here -->
+    ```
 
 ## Previews
 
@@ -164,11 +189,11 @@ When you need to connect to a new data source (for example, a chat service), fol
 
 ## Credits
 
-- Fake logos by [uicontent.co](https://uicontent.co/svg-dummy-logo/)
-- Quote avatar person by [thispersondoesnotexist.com](https://thispersondoesnotexist.com/)
-- Misc icons and logo from [icones.js.org](https://icones.js.org/) by [@antfu](https://github.com/antfu)
-- Carousel powered by [swiperjs.com](https://swiperjs.com/)
-- Inter font by [rsms.me](https://rsms.me/inter/)
+-   Fake logos by [uicontent.co](https://uicontent.co/svg-dummy-logo/)
+-   Quote avatar person by [thispersondoesnotexist.com](https://thispersondoesnotexist.com/)
+-   Misc icons and logo from [icones.js.org](https://icones.js.org/) by [@antfu](https://github.com/antfu)
+-   Carousel powered by [swiperjs.com](https://swiperjs.com/)
+-   Inter font by [rsms.me](https://rsms.me/inter/)
 
 ## Tags
 
@@ -178,8 +203,8 @@ When you need to connect to a new data source (for example, a chat service), fol
 
 All commands are run from the root of the project, from a terminal. This project uses `pnpm` as the package manager.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
+| Command                    | Action                                           |
+| :------------------------- | :----------------------------------------------- |
 | `pnpm install`             | Installs dependencies                            |
 | `pnpm run dev`             | Starts local dev server at `localhost:4321`      |
 | `pnpm run build`           | Build your production site to `./dist/`          |
