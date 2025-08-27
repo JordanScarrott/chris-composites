@@ -1,8 +1,13 @@
 ---
 
 import Logo from '../assets/theme-images/logo.svg'
+import { getAuthAdapter } from '../lib/adapters/auth/authAdapter';
 
 const { settings } = Astro.props
+
+const auth = getAuthAdapter();
+const isLoggedIn = await auth.isLoggedIn();
+const user = await auth.getUser();
 
 ---
 
